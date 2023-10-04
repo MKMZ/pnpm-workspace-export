@@ -8,7 +8,9 @@ export const analyzePackage = (
   packageAnalysis: PackageAnalysis
 ): PackageAnalysis => {
   const current = packageAnalysis.toAnalyze[0];
-  const fullPackageName = `/${current.name}/${current.fullVersion}`;
+  const fullPackageName = pnpmPackages.hasOwnProperty(current.fullVersion)
+    ? current.fullVersion
+    : `/${current.name}/${current.fullVersion}`;
   if (fullPackageName.includes("/link:")) {
     console.log(`Ignoring package from pnpm-lock.yaml, that is unhandled by npm: ${fullPackageName}`);
     return {
@@ -16,23 +18,29 @@ export const analyzePackage = (
       toAnalyze: packageAnalysis.toAnalyze.slice(1),
     };
   }
-  if (!pnpmPackages.hasOwnProperty(fullPackageName) && current.required) {
-    throw new Error(`Cannot determine package dependency: ${fullPackageName} in pnpm lockfile`);
+
+  const pnpmPackage = pnpmPackages.hasOwnProperty(fullPackageName) 
+    ? pnpmPackages[fullPackageName] 
+    : null;
+  if (!pnpmPackage) {
+    if (current.required) {
+      throw new Error(`Cannot determine package dependency: ${fullPackageName} in pnpm lockfile`);
+    } else {
+      return {
+        ...packageAnalysis,
+        toAnalyze: packageAnalysis.toAnalyze.slice(1),
+      };
+    }
   }
 
-  if (!pnpmPackages.hasOwnProperty(fullPackageName) && !current.required) {
-    return {
-      ...packageAnalysis,
-      toAnalyze: packageAnalysis.toAnalyze.slice(1),
-    };
-  }
-
-  const pnpmPackage = pnpmPackages[fullPackageName];
   const newDependenciesToAnalyze = resolveDependenciesToAnalyze(pnpmPackage.dependencies ?? {}, packageAnalysis, true);
   const newOptionalDependenciesToAnalyze = resolveDependenciesToAnalyze(pnpmPackage.optionalDependencies ?? {}, packageAnalysis, false);
   const newPeerDependenciesToAnalyze = resolveDependenciesToAnalyze(pnpmPackage.peerDependencies ?? {}, packageAnalysis, false);
 
-  const resolution = pkgSnapshotToResolution(fullPackageName, pnpmPackage, { default: 'https://registry.npmjs.org/' }) as TarballResolution;
+  const resolution = pkgSnapshotToResolution(
+    fullPackageName,
+    pnpmPackage,
+    { default: 'https://registry.npmjs.org/' }) as TarballResolution;
   const newPackage: Package = {
     version: current.version,
     integrity: resolution.integrity,

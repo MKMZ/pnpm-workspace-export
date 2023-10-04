@@ -1,7 +1,7 @@
 {
   "name": "pnpm-workspace-export",
   "private": false,
-  "version": "0.1.0",
+  "version": "0.1.1",
   "type": "module",
   "scripts": {
     "build": "vite build && tsc",
@@ -20,6 +20,10 @@
     ".": {
       "import": "./dist/index.js"
     }
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/MKMZ/pnpm-workspace-export.git"
   },
   "types": "dist/index.d.ts",
   "dependencies": {
