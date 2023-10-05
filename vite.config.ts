@@ -7,7 +7,7 @@ export default defineConfig({
   build: {
     lib: {
       entry: "src/index.ts",
-      name: "pnpm-exporter",
+      name: "pnpm-workspace-export",
       fileName: "index",
       formats: ["es"],
     },
