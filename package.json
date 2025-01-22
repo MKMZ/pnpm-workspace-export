@@ -1,7 +1,7 @@
 {
   "name": "pnpm-workspace-export",
   "private": false,
-  "version": "0.1.2",
+  "version": "0.2.0",
   "type": "module",
   "main": "dist/index.js",
   "scripts": {
@@ -28,10 +28,10 @@
   },
   "types": "dist/index.d.ts",
   "dependencies": {
-    "@pnpm/lockfile-file": "^8.1.2",
-    "@pnpm/lockfile-utils": "^8.0.5",
-    "@pnpm/logger": "^5.0.0",
-    "@pnpm/read-project-manifest": "^5.0.6",
+    "@pnpm/lockfile-utils": "11.0.4",
+    "@pnpm/lockfile.fs": "900.0.2",
+    "@pnpm/logger": "5.2.0",
+    "@pnpm/read-project-manifest": "6.0.10",
     "commander": "^11.0.0"
   },
   "devDependencies": {

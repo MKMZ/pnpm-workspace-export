@@ -2,7 +2,7 @@ import { parsePackageJson } from "./packageJson.js";
 import { Package, PackageAnalysis, PackageLockJson, PackageToAnalyze } from "./types.js";
 import { analyzePackage } from "./analyzePackage.js";
 import { groomVersion } from "./groomVersion.js";
-import { Lockfile } from "@pnpm/lockfile-file";
+import { Lockfile, ProjectId } from "@pnpm/lockfile.fs";
 
 export const resolvePackageLockJsonContent = async (
   lockfileDir: string,
@@ -13,7 +13,7 @@ export const resolvePackageLockJsonContent = async (
   const pnpmPackages = pnpmLockFile.packages ?? {};
   const packageJsonPath = `${lockfileDir}/${packageJsonRelativeDir}/package.json`;
   const packageJson = await parsePackageJson(packageJsonPath);
-  const mainPackageKey = packageJsonRelativeDir.replace("\\", "/");
+  const mainPackageKey = packageJsonRelativeDir.replace("\\", "/") as ProjectId;
   if (!pnpmImporters.hasOwnProperty(mainPackageKey)) {
     throw new Error(`Cannot determine importer: ${mainPackageKey} in pnpm lockfile`);
   }
