@@ -13,7 +13,7 @@ export const analyzePackage = (
   )
     ? current.fullVersion
     : `${current.name}@${current.fullVersion}`;
-  if (fullPackageName.includes("/link:")) {
+  if (fullPackageName.includes("@link:")) {
     console.log(
       `Ignoring package from pnpm-lock.yaml, that is unhandled by npm: ${fullPackageName}`
     );
